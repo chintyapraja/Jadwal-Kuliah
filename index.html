@@ -55,6 +55,7 @@
       <div class="authbar">
         <button id="loginBtn" class="btn primary" onclick="loginGoogle()">Sign in with Google</button>
         <button id="logoutBtn" class="btn" onclick="logoutGoogle()" style="display:none">Sign out</button>
+        <button class="btn" onclick="forceKST()">Fix times to KST</button>
       </div>
     </div>
     <div class="note">Firebase is already connected to project <b>praja-schedule</b>. After you sign in, edits are saved to Firestore and update automatically on your other devices.</div>
@@ -139,22 +140,51 @@ window.loginGoogle=async()=>{
 
 window.logoutGoogle=async()=>{ if(auth) await F.signOut(auth); };
 
+window.forceKST=async()=>{
+  const conv = t => {
+    const m={'07:15':'09:15','09:00':'11:00','09:05':'11:05','13:00':'15:00','14:45':'16:45','15:40':'17:40'};
+    return m[t] || t;
+  };
+  courses=courses.map(c=>({...c,start:conv(c.start),end:conv(c.end)}));
+  localStorage.setItem('prajaTeachingCourses',JSON.stringify(courses));
+  renderAll();
+  if(db && F && auth?.currentUser){
+    await F.setDoc(F.doc(db,'schedules','praja-teaching'),{courses,updatedAt:F.serverTimestamp()});
+    $('statusText').textContent='Cloud synced · KST fixed';
+    $('statusDot').classList.add('on');
+  }
+};
+
+
 function startCloudSync(){
  if(firebaseUnsub) firebaseUnsub();
  const ref=F.doc(db,'schedules','praja-teaching');
  firebaseUnsub=F.onSnapshot(ref,async snap=>{
    if(snap.exists()){
-     const cloud=snap.data().courses;
+     let cloud=snap.data().courses;
      if(Array.isArray(cloud)){
+       // One-time migration: convert previously saved WIB times to Korea time (KST, +2h).
+       let changed=false;
+       cloud=cloud.map(c=>{
+         const x={...c};
+         if(x.start==='13:00' && x.end==='14:45'){ x.start='15:00'; x.end='16:45'; changed=true; }
+         if(x.start==='07:15' && x.end==='09:00'){ x.start='09:15'; x.end='11:00'; changed=true; }
+         if(x.start==='09:05' && x.end==='15:40'){ x.start='11:05'; x.end='17:40'; changed=true; }
+         return x;
+       });
        courses=cloud;
        localStorage.setItem('prajaTeachingCourses',JSON.stringify(courses));
        renderAll();
+       if(changed){
+         await F.setDoc(ref,{courses,updatedAt:F.serverTimestamp()});
+         $('statusText').textContent='Cloud synced · WIB → KST updated';
+       }
      }
    }else{
      await F.setDoc(ref,{courses,updatedAt:F.serverTimestamp()});
    }
    $('statusDot').classList.add('on');
-   $('statusText').textContent='Cloud synced';
+   if($('statusText').textContent==='Not signed in') $('statusText').textContent='Cloud synced';
  },err=>{
    console.error(err);
    $('statusDot').classList.remove('on');
