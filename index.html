@@ -21,8 +21,8 @@
 <body>
 <div class="wrap">
   <div class="top">
-    <div class="title"><h1>Teaching Schedule</h1><p>Ni Putu Praja Chintya, S.T., M.Eng.</p></div>
-    <div class="badges"><div class="badge">Current: <strong>Week 2</strong></div><div class="badge">Semester start: <strong>17 Aug 2026</strong></div></div>
+    <div class="title"><h1>Teaching Schedule</h1><p>Ni Putu Praja Chintya, S.T., M.Eng. · Korea Standard Time (KST, UTC+9)</p></div>
+    <div class="badges"><div class="badge">Current: <strong>Week 2</strong></div><div class="badge">Semester start: <strong>17 Aug 2026</strong></div><div class="badge">Time zone: <strong>KST (UTC+9)</strong></div></div>
   </div>
 
   <div class="card">
@@ -66,10 +66,10 @@ const semesterStart = new Date('2026-08-17T00:00:00');
 const currentWeek = 2;
 let viewWeek = currentWeek;
 const defaultCourses = [
- {id:'kartografi',name:'SVSP261105 Kartografi',day:1,start:'13:00',end:'14:45',room:'R. 308',kelas:'1AB',weeks:[4,5,6,7,13,14,15],revised:[],replaced:[]},
- {id:'gis',name:'SVSP243135 Sistem Informasi Geospasial',day:1,start:'07:15',end:'09:00',room:'Hall',kelas:'3AB',weeks:[4,5,6,7],revised:[8,9,10],replaced:[13,14,15]},
- {id:'db',name:'SVSP243131 Sistem Basisdata',day:3,start:'07:15',end:'09:00',room:'Hall',kelas:'3AB',weeks:[4,5,6,7],revised:[8,9,10],replaced:[13,14,15]},
- {id:'math',name:'SVSP261101 Matematika',day:3,start:'09:05',end:'15:40',room:'R. 304',kelas:'1AB',weeks:[11,12,13,14,15,16],revised:[],replaced:[]}
+ {id:'kartografi',name:'SVSP261105 Kartografi',day:1,start:'15:00',end:'16:45',room:'R. 308',kelas:'1AB',weeks:[4,5,6,7,13,14,15],revised:[],replaced:[]},
+ {id:'gis',name:'SVSP243135 Sistem Informasi Geospasial',day:1,start:'09:15',end:'11:00',room:'Hall',kelas:'3AB',weeks:[4,5,6,7],revised:[8,9,10],replaced:[13,14,15]},
+ {id:'db',name:'SVSP243131 Sistem Basisdata',day:3,start:'09:15',end:'11:00',room:'Hall',kelas:'3AB',weeks:[4,5,6,7],revised:[8,9,10],replaced:[13,14,15]},
+ {id:'math',name:'SVSP261101 Matematika',day:3,start:'11:05',end:'17:40',room:'R. 304',kelas:'1AB',weeks:[11,12,13,14,15,16],revised:[],replaced:[]}
 ];
 let courses = JSON.parse(localStorage.getItem('prajaTeachingCourses')||'null') || defaultCourses;
 let firebaseUnsub=null, db=null, auth=null, F=null;
