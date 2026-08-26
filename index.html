@@ -1,97 +1,146 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Praja Teaching Schedule</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Praja Schedule</title>
 <style>
-:root{--bg:#f6f7fb;--card:#fff;--text:#1f2937;--muted:#6b7280;--line:#e5e7eb;--accent:#111827;--teach:#fff58a;--rev:#edc9e9;--today:#eef2ff;--ok:#dcfce7;--shadow:0 8px 28px rgba(15,23,42,.06)}
-*{box-sizing:border-box} body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--text)}
-.wrap{max-width:1180px;margin:0 auto;padding:28px 18px 50px}.top{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;margin-bottom:18px}.title h1{font-size:28px;margin:0 0 5px}.title p{margin:0;color:var(--muted)}
-.badges{display:flex;gap:8px;flex-wrap:wrap}.badge{background:var(--card);border:1px solid var(--line);padding:8px 12px;border-radius:999px;font-size:13px}.badge strong{color:#111827}
-.card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:18px;margin-top:14px}.card h2{font-size:18px;margin:0 0 14px}
-.toolbar{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}.btn{border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px 12px;cursor:pointer;font-size:14px}.btn:hover{background:#f9fafb}.btn.primary{background:#111827;color:#fff;border-color:#111827}.btn.danger{color:#b91c1c}
-.week-range{font-weight:700}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:14px}.day{border:1px solid var(--line);border-radius:13px;overflow:hidden;background:#fff}.day-head{padding:11px 13px;background:#f9fafb;border-bottom:1px solid var(--line);display:flex;justify-content:space-between}.day-head span{font-size:13px;color:var(--muted)}.event{margin:10px;border-left:5px solid #111827;padding:11px 12px;background:#fafafa;border-radius:9px}.event.rev{border-left-color:#b455a0;background:#fcf5fb}.event .time{font-size:12px;color:var(--muted)}.event .name{font-weight:750;margin:3px 0}.event .meta{font-size:13px;color:#4b5563}.empty{padding:20px;text-align:center;color:var(--muted);font-size:13px}
-.table-wrap{overflow:auto}.week-table{border-collapse:separate;border-spacing:0;width:100%;min-width:850px;font-size:13px}.week-table th,.week-table td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:9px;text-align:center}.week-table th:first-child,.week-table td:first-child{border-left:1px solid var(--line);text-align:left;min-width:245px}.week-table thead th{background:#f9fafb;border-top:1px solid var(--line)}.teach{background:var(--teach)}.revcell{background:var(--rev)}.replaced{background:repeating-linear-gradient(135deg,#f3f4f6,#f3f4f6 5px,#fff 5px,#fff 10px);color:#9ca3af;text-decoration:line-through}.current{box-shadow:inset 0 0 0 2px #6366f1}.legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;font-size:13px;color:#4b5563}.dot{display:inline-block;width:14px;height:14px;border-radius:3px;vertical-align:-2px;margin-right:5px;border:1px solid #ddd}.dot.teach{background:var(--teach)}.dot.rev{background:var(--rev)}.dot.replaced{background:repeating-linear-gradient(135deg,#f3f4f6,#f3f4f6 4px,#fff 4px,#fff 8px)}
-.course-list{display:grid;gap:10px}.course-row{display:grid;grid-template-columns:1.7fr 1.2fr .75fr .5fr auto;gap:8px;align-items:center}.course-row input{width:100%;border:1px solid var(--line);border-radius:8px;padding:8px}.small{font-size:12px;color:var(--muted)}
-.sync{display:flex;align-items:center;gap:8px;font-size:13px}.authbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.user-email{font-size:12px;color:var(--muted)}.status{width:9px;height:9px;border-radius:50%;background:#9ca3af}.status.on{background:#22c55e}.setup{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}.setup.show{display:block}.setup-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.setup input{width:100%;padding:8px;border:1px solid var(--line);border-radius:8px}.note{font-size:12px;color:var(--muted);line-height:1.5;margin-top:8px}
-@media(max-width:760px){.grid{grid-template-columns:1fr}.course-row{grid-template-columns:1fr}.setup-grid{grid-template-columns:1fr}.top{flex-direction:column}}
+:root{
+  --bg:#edf2f5;--card:#fff;--line:#d7e0e7;--text:#23303a;--muted:#627481;
+  --green:#187e6a;--mint:#d8f1eb;--purple:#e6e2f6;--blue:#dfe8fb;--yellow:#fbf2c9;--pink:#f8dde1;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text)}
+header{background:#f8fafb;border-bottom:1px solid var(--line);padding:12px 18px;display:flex;align-items:center;justify-content:space-between;gap:14px;position:sticky;top:0;z-index:10}
+h1{margin:0;font-size:27px;line-height:1}.subtitle{margin-top:6px;color:var(--muted);font-size:14px}
+.actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+button{font:inherit}.btn{border:1px solid var(--line);background:white;border-radius:10px;padding:10px 14px;font-weight:700;color:#33434d;cursor:pointer}
+.btn:hover{background:#f6f8fa}.btn.primary{background:var(--green);color:white;border-color:var(--green)}
+.live{display:flex;gap:7px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:999px;padding:9px 12px;font-size:13px;font-weight:700}
+.dot{width:8px;height:8px;border-radius:50%;background:#9aa7b0}.dot.on{background:#16a163}
+main{padding:12px 14px 24px;max-width:1280px;margin:0 auto}
+.week-block{margin-bottom:16px}.week-head{display:flex;justify-content:space-between;align-items:center;margin:0 0 8px;font-weight:800;color:#546b78}.week-head .range{font-size:14px}
+.week-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;padding-bottom:3px}
+.day{background:var(--card);border:1px solid var(--line);border-radius:10px;min-height:170px;display:flex;flex-direction:column;overflow:hidden}
+.day.today{outline:2px solid var(--green);outline-offset:-2px}
+.day-head{background:#eef4f7;border-bottom:1px solid var(--line);padding:10px 12px;display:flex;justify-content:space-between;font-weight:800;font-size:14px}
+.date{color:#647985}.events{padding:8px;display:flex;flex-direction:column;gap:6px;flex:1}
+.event{border-radius:8px;padding:7px 9px;cursor:pointer;line-height:1.15;border:1px solid rgba(0,0,0,.02)}
+.event:hover{filter:brightness(.98)}.event .time{font-size:12px;color:#566975;margin-bottom:3px;font-weight:700}.event .title{font-size:13px;font-weight:800}.event .place{font-size:12px;color:#657783;margin-top:4px}
+.cat-teaching{background:var(--yellow)}.cat-revised{background:#f0d5ed}.cat-meeting{background:var(--purple)}.cat-research{background:var(--mint)}.cat-travel{background:var(--pink)}.cat-other{background:var(--blue)}
+.add-day{margin:6px;border:1px dashed #9fb4c0;background:white;border-radius:8px;padding:6px;text-align:center;color:#5d7180;font-weight:700;font-size:12px;cursor:pointer}.add-day:hover{background:#f6fafb}
+.modal-backdrop{position:fixed;inset:0;background:rgba(20,28,34,.35);display:none;align-items:center;justify-content:center;padding:20px;z-index:50}.modal-backdrop.show{display:flex}
+.modal{background:white;border-radius:16px;width:min(520px,100%);box-shadow:0 20px 60px rgba(0,0,0,.2);padding:18px}
+.modal h2{margin:0 0 16px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.full{grid-column:1/-1}label{font-size:12px;font-weight:800;color:#60727e;display:block;margin-bottom:5px}
+input,select{width:100%;padding:10px;border:1px solid var(--line);border-radius:9px;font:inherit;background:#fff}
+.modal-actions{display:flex;justify-content:space-between;gap:8px;margin-top:16px}.right-actions{display:flex;gap:8px}
+.danger{color:#b42318}.hint{font-size:12px;color:var(--muted);margin-top:10px}
+@media(max-width:900px){header{align-items:flex-start;flex-direction:column}.week-grid{grid-template-columns:repeat(5,210px);overflow-x:auto}}
+
+.my-schedule{max-width:1280px;margin:12px auto 0;padding:0 14px}
+.summary-head{display:flex;justify-content:space-between;align-items:end;margin-bottom:8px}
+.summary-head h2{margin:0;font-size:17px}.summary-note{font-size:12px;color:var(--muted);margin-top:3px}
+.summary-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.summary-card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.summary-day{font-size:11px;font-weight:900;color:var(--green);letter-spacing:.06em}
+.summary-time{font-size:15px;font-weight:900;margin-top:3px}
+.summary-title{font-size:13px;font-weight:800;margin-top:4px}
+.summary-meta,.summary-weeks{font-size:11px;color:var(--muted);margin-top:3px}
+.summary-weeks{color:#596b76}
+@media(max-width:900px){.summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.summary-grid{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="top">
-    <div class="title"><h1>Teaching Schedule</h1><p>Ni Putu Praja Chintya, S.T., M.Eng. · Korea Standard Time (KST, UTC+9)</p></div>
-    <div class="badges"><div class="badge">Current: <strong>Week 2</strong></div><div class="badge">Semester start: <strong>17 Aug 2026</strong></div><div class="badge">Time zone: <strong>KST (UTC+9)</strong></div></div>
+<header>
+  <div>
+    <h1>Teaching Schedule</h1>
+    <div class="subtitle" id="showing">Teaching schedule · Korea Standard Time (KST)</div>
   </div>
+  <div class="actions">
+    <div class="live"><span id="dot" class="dot"></span><span id="syncText">Local</span></div>
+    <button class="btn" onclick="shiftWeeks(-2)">Prev week</button>
+    <button class="btn" onclick="goThisWeek()">This week</button>
+    <button class="btn" onclick="shiftWeeks(2)">Next week</button>
+    <button class="btn" id="loginBtn" onclick="loginGoogle()">Google sign-in</button>
+    <button class="btn primary" onclick="openAdd()">Add event</button>
+  </div>
+</header>
 
-  <div class="card">
-    <div class="toolbar">
-      <div><h2 style="margin-bottom:3px">Two-week overview</h2><div class="small" id="weekLabel"></div></div>
-      <div><button class="btn" onclick="shiftWeek(-1)">Prev week</button> <button class="btn" onclick="goCurrent()">This week</button> <button class="btn" onclick="shiftWeek(1)">Next week</button></div>
+
+<section class="my-schedule">
+  <div class="summary-head">
+    <div>
+      <h2>My Teaching Schedule</h2>
+      <div class="summary-note">All times are Korea Standard Time (KST, UTC+9)</div>
     </div>
-    <div id="twoWeek" class="grid"></div>
   </div>
-
-  <div class="card">
-    <h2>Semester teaching plan</h2>
-    <div class="table-wrap"><table class="week-table" id="weekTable"></table></div>
-    <div class="legend"><span><i class="dot teach"></i>Teaching week</span><span><i class="dot rev"></i>Revised teaching week</span><span><i class="dot replaced"></i>Replaced / no class</span></div>
+  <div class="summary-grid">
+    <div class="summary-card">
+      <div class="summary-day">MON</div>
+      <div class="summary-time">09:15–11:00</div>
+      <div class="summary-title">Sistem Informasi Geospasial</div>
+      <div class="summary-meta">Hall · Class 3AB</div>
+      <div class="summary-weeks">Weeks 4–7 · Revised: 8–10</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-day">MON</div>
+      <div class="summary-time">15:00–16:45</div>
+      <div class="summary-title">Kartografi</div>
+      <div class="summary-meta">R. 308 · Class 1AB</div>
+      <div class="summary-weeks">Weeks 4–7, 13–15</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-day">WED</div>
+      <div class="summary-time">09:15–11:00</div>
+      <div class="summary-title">Sistem Basisdata</div>
+      <div class="summary-meta">Hall · Class 3AB</div>
+      <div class="summary-weeks">Weeks 4–7 · Revised: 8–10</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-day">WED</div>
+      <div class="summary-time">11:05–17:40</div>
+      <div class="summary-title">Matematika</div>
+      <div class="summary-meta">R. 304 · Class 1AB</div>
+      <div class="summary-weeks">Weeks 11–16</div>
+    </div>
   </div>
+</section>
 
-  <div class="card">
-    <div class="toolbar"><h2>Courses</h2><button class="btn" onclick="addCourse()">Add course</button></div>
-    <div id="courseList" class="course-list"></div>
-    <div class="small" style="margin-top:10px">Edits save automatically in this browser. Cloud sync is optional below.</div>
-  </div>
+<main id="calendar"></main>
 
-  <div class="card">
-    <div class="toolbar">
-      <div>
-        <h2 style="margin-bottom:3px">Live cloud sync</h2>
-        <div class="sync"><span id="statusDot" class="status"></span><span id="statusText">Not signed in</span></div>
-        <div id="userEmail" class="user-email"></div>
+<div class="modal-backdrop" id="modal">
+  <div class="modal">
+    <h2 id="modalTitle">Add event</h2>
+    <div class="form-grid">
+      <div class="full"><label>Title</label><input id="fTitle" placeholder="e.g. Kartografi"></div>
+      <div><label>Date</label><input id="fDate" type="date"></div>
+      <div><label>Category</label>
+        <select id="fCategory">
+          <option value="teaching">Teaching</option>
+          <option value="revised">Revised class</option>
+          <option value="other">Other teaching</option>
+        </select>
       </div>
-      <div class="authbar">
-        <button id="loginBtn" class="btn primary" onclick="loginGoogle()">Sign in with Google</button>
-        <button id="logoutBtn" class="btn" onclick="logoutGoogle()" style="display:none">Sign out</button>
-        <button class="btn" onclick="forceKST()">Fix times to KST</button>
+      <div><label>Start</label><input id="fStart" type="time"></div>
+      <div><label>End</label><input id="fEnd" type="time"></div>
+      <div class="full"><label>Location / note</label><input id="fPlace" placeholder="Hall, R.308, online, etc."></div>
+    </div>
+    <div class="hint">Click any event later to edit or delete it.</div>
+    <div class="modal-actions">
+      <button class="btn danger" id="deleteBtn" onclick="deleteEvent()" style="visibility:hidden">Delete</button>
+      <div class="right-actions">
+        <button class="btn" onclick="closeModal()">Cancel</button>
+        <button class="btn primary" onclick="saveEvent()">Save</button>
       </div>
     </div>
-    <div class="note">Firebase is already connected to project <b>praja-schedule</b>. After you sign in, edits are saved to Firestore and update automatically on your other devices.</div>
   </div>
 </div>
 
 <script type="module">
-const semesterStart = new Date('2026-08-17T00:00:00');
-const currentWeek = 2;
-let viewWeek = currentWeek;
-const defaultCourses = [
- {id:'kartografi',name:'SVSP261105 Kartografi',day:1,start:'15:00',end:'16:45',room:'R. 308',kelas:'1AB',weeks:[4,5,6,7,13,14,15],revised:[],replaced:[]},
- {id:'gis',name:'SVSP243135 Sistem Informasi Geospasial',day:1,start:'09:15',end:'11:00',room:'Hall',kelas:'3AB',weeks:[4,5,6,7],revised:[8,9,10],replaced:[13,14,15]},
- {id:'db',name:'SVSP243131 Sistem Basisdata',day:3,start:'09:15',end:'11:00',room:'Hall',kelas:'3AB',weeks:[4,5,6,7],revised:[8,9,10],replaced:[13,14,15]},
- {id:'math',name:'SVSP261101 Matematika',day:3,start:'11:05',end:'17:40',room:'R. 304',kelas:'1AB',weeks:[11,12,13,14,15,16],revised:[],replaced:[]}
-];
-let courses = JSON.parse(localStorage.getItem('prajaTeachingCourses')||'null') || defaultCourses;
-let firebaseUnsub=null, db=null, auth=null, F=null;
-const $=id=>document.getElementById(id);
-function saveLocal(){localStorage.setItem('prajaTeachingCourses',JSON.stringify(courses));renderAll(); if(db) pushCloud();}
-function weekStart(n){const d=new Date(semesterStart);d.setDate(d.getDate()+(n-1)*7);return d}
-function fmt(d){return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short'});}
-function teachingType(c,w){if(c.revised.includes(w)) return 'rev'; if(c.weeks.includes(w)) return 'teach'; if(c.replaced.includes(w)) return 'replaced'; return ''}
-function renderTwoWeek(){const box=$('twoWeek');box.innerHTML=''; const labels=['Sun','Mon','Tue','Wed','Thu','Fri','Sat']; const start=weekStart(viewWeek); const end=weekStart(viewWeek+2);end.setDate(end.getDate()-1); $('weekLabel').textContent=`Week ${viewWeek}–${viewWeek+1} · ${fmt(start)} – ${fmt(end)} 2026`;
- for(let w=viewWeek;w<=viewWeek+1;w++){for(let day=1;day<=5;day++){const d=weekStart(w);d.setDate(d.getDate()+day-1);const events=courses.filter(c=>c.day===day && ['teach','rev'].includes(teachingType(c,w))).sort((a,b)=>a.start.localeCompare(b.start)); const el=document.createElement('div');el.className='day';el.innerHTML=`<div class="day-head"><b>${labels[day]} · ${fmt(d)}</b><span>W${w}</span></div>`+(events.length?events.map(c=>`<div class="event ${teachingType(c,w)==='rev'?'rev':''}"><div class="time">${c.start}–${c.end}</div><div class="name">${c.name.replace(/^\S+\s/,'')}</div><div class="meta">${c.room} · Class ${c.kelas}${teachingType(c,w)==='rev'?' · Revised week':''}</div></div>`).join(''):`<div class="empty">No teaching</div>`);box.appendChild(el)}}}
-function renderWeekTable(){let h='<thead><tr><th>Course</th>';for(let w=1;w<=16;w++)h+=`<th class="${w===currentWeek?'current':''}">${w}</th>`;h+='</tr></thead><tbody>';for(const c of courses){h+=`<tr><td><b>${c.name}</b><br><span class="small">${['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][c.day]} ${c.start}–${c.end} · ${c.room} · ${c.kelas}</span></td>`;for(let w=1;w<=16;w++){const t=teachingType(c,w);h+=`<td class="${t==='teach'?'teach':t==='rev'?'revcell':t==='replaced'?'replaced':''} ${w===currentWeek?'current':''}">${t==='rev'?'R':t==='replaced'?'×':''}</td>`}h+='</tr>'}h+='</tbody>';$('weekTable').innerHTML=h}
-function renderCourses(){const box=$('courseList');box.innerHTML='';courses.forEach((c,i)=>{const row=document.createElement('div');row.className='course-row';row.innerHTML=`<input value="${c.name}" data-k="name"><input value="${c.start}-${c.end}" data-k="time"><input value="${c.room}" data-k="room"><input value="${c.kelas}" data-k="kelas"><button class="btn danger">Delete</button>`; const ins=row.querySelectorAll('input');ins.forEach(inp=>inp.addEventListener('change',()=>{if(inp.dataset.k==='time'){const [s,e]=inp.value.split('-').map(x=>x.trim());c.start=s||c.start;c.end=e||c.end}else c[inp.dataset.k]=inp.value;saveLocal()}));row.querySelector('button').onclick=()=>{courses.splice(i,1);saveLocal()};box.appendChild(row)})}
-function renderAll(){renderTwoWeek();renderWeekTable();renderCourses()}
-window.shiftWeek=n=>{viewWeek=Math.max(1,Math.min(15,viewWeek+n));renderTwoWeek()};window.goCurrent=()=>{viewWeek=currentWeek;renderTwoWeek()};window.addCourse=()=>{courses.push({id:crypto.randomUUID(),name:'New course',day:1,start:'09:00',end:'10:00',room:'',kelas:'',weeks:[],revised:[],replaced:[]});saveLocal()};
-async function initFirebaseLib(){
- const appMod=await import('https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js');
- const fsMod=await import('https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js');
- const authMod=await import('https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js');
- return {...appMod,...fsMod,...authMod};
-}
-
+const semesterStart = new Date('2026-08-17T00:00:00+09:00');
 const firebaseConfig = {
   apiKey: "AIzaSyCzW9sHuRppwYoJ96UfM6a83J7Bpq0l-CU",
   authDomain: "praja-schedule.firebaseapp.com",
@@ -102,105 +151,131 @@ const firebaseConfig = {
   measurementId: "G-834YH8LEHH"
 };
 
+const teachingCourses = [
+  {title:'Kartografi',day:1,start:'15:00',end:'16:45',place:'R. 308 · Class 1AB',weeks:[4,5,6,7,13,14,15],category:'teaching'},
+  {title:'Sistem Informasi Geospasial',day:1,start:'09:15',end:'11:00',place:'Hall · Class 3AB',weeks:[4,5,6,7],category:'teaching'},
+  {title:'Sistem Informasi Geospasial',day:1,start:'09:15',end:'11:00',place:'Hall · Class 3AB · Revised',weeks:[8,9,10],category:'revised'},
+  {title:'Sistem Basisdata',day:3,start:'09:15',end:'11:00',place:'Hall · Class 3AB',weeks:[4,5,6,7],category:'teaching'},
+  {title:'Sistem Basisdata',day:3,start:'09:15',end:'11:00',place:'Hall · Class 3AB · Revised',weeks:[8,9,10],category:'revised'},
+  {title:'Matematika',day:3,start:'11:05',end:'17:40',place:'R. 304 · Class 1AB',weeks:[11,12,13,14,15,16],category:'teaching'}
+];
+
+function seedTeachingEvents(){
+  const ev=[];
+  for(const c of teachingCourses){
+    for(const w of c.weeks){
+      const d=new Date(semesterStart);
+      d.setDate(d.getDate()+(w-1)*7+(c.day-1));
+      ev.push({
+        id:`seed-${c.title}-${w}-${c.category}`.replace(/\s+/g,'-'),
+        title:c.title,date:isoDate(d),start:c.start,end:c.end,place:c.place,category:c.category,seed:true
+      });
+    }
+  }
+  return ev;
+}
+
+let events = JSON.parse(localStorage.getItem('prajaSimpleEvents')||'null') || seedTeachingEvents();
+let viewStart = startOfWeek(new Date('2026-09-07T12:00:00+09:00'));
+let editingId=null, F=null, db=null, auth=null, unsub=null;
+
+const $=id=>document.getElementById(id);
+function startOfWeek(d){const x=new Date(d); const day=x.getDay(); const diff=(day===0?-6:1-day); x.setDate(x.getDate()+diff); x.setHours(0,0,0,0); return x}
+function isoDate(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+function fmtMD(d){return `${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}`}
+function fmtLong(d){return d.toLocaleDateString('en-CA',{year:'numeric',month:'2-digit',day:'2-digit'}).replaceAll('/','-')}
+function addDays(d,n){const x=new Date(d);x.setDate(x.getDate()+n);return x}
+function dayName(d){return ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()]}
+function sameDate(a,b){return isoDate(a)===isoDate(b)}
+
+function render(){
+  const cal=$('calendar'); cal.innerHTML='';
+  const overallEnd=addDays(viewStart,13);
+  $('showing').textContent=`Showing ${fmtLong(viewStart)} to ${fmtLong(overallEnd)} · Korea Standard Time (KST)`;
+  for(let wk=0;wk<2;wk++){
+    const ws=addDays(viewStart,wk*7), we=addDays(ws,6);
+    const block=document.createElement('section');block.className='week-block';
+    const semWeek=Math.floor((ws-semesterStart)/(7*24*60*60*1000))+1;
+    block.innerHTML=`<div class="week-head"><span>Semester Week ${semWeek}</span><span class="range">${fmtLong(ws)} - ${fmtLong(we)}</span></div>`;
+    const grid=document.createElement('div');grid.className='week-grid';
+    for(let i=0;i<5;i++){
+      const d=addDays(ws,i);
+      const day=document.createElement('div');day.className='day'+(sameDate(d,new Date())?' today':'');
+      const list=events.filter(e=>e.date===isoDate(d)).sort((a,b)=>(a.start||'99:99').localeCompare(b.start||'99:99'));
+      day.innerHTML=`<div class="day-head"><span>${dayName(d)}</span><span class="date">${fmtMD(d)}</span></div><div class="events"></div><div class="add-day">+ Add</div>`;
+      const evbox=day.querySelector('.events');
+      for(const e of list){
+        const card=document.createElement('div');card.className=`event cat-${e.category||'other'}`;
+        card.innerHTML=`${e.start?`<div class="time">${e.start}${e.end?' - '+e.end:''}</div>`:''}<div class="title">${escapeHtml(e.title)}</div>${e.place?`<div class="place">${escapeHtml(e.place)}</div>`:''}`;
+        card.onclick=()=>openEdit(e.id);evbox.appendChild(card);
+      }
+      day.querySelector('.add-day').onclick=()=>openAdd(isoDate(d));
+      grid.appendChild(day);
+    }
+    block.appendChild(grid);cal.appendChild(block);
+  }
+}
+function escapeHtml(s=''){return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+window.shiftWeeks=n=>{viewStart=addDays(viewStart,n*7);render()}
+window.goThisWeek=()=>{viewStart=startOfWeek(new Date());render()}
+
+window.openAdd=(date='')=>{
+  editingId=null;$('modalTitle').textContent='Add event';$('deleteBtn').style.visibility='hidden';
+  $('fTitle').value='';$('fDate').value=date||isoDate(new Date());$('fStart').value='';$('fEnd').value='';$('fPlace').value='';$('fCategory').value='teaching';
+  $('modal').classList.add('show');
+}
+window.openEdit=id=>{
+  const e=events.find(x=>x.id===id);if(!e)return;editingId=id;$('modalTitle').textContent='Edit event';$('deleteBtn').style.visibility='visible';
+  $('fTitle').value=e.title||'';$('fDate').value=e.date||'';$('fStart').value=e.start||'';$('fEnd').value=e.end||'';$('fPlace').value=e.place||'';$('fCategory').value=e.category||'other';
+  $('modal').classList.add('show');
+}
+window.closeModal=()=>{$('modal').classList.remove('show')}
+window.saveEvent=()=>{
+  const title=$('fTitle').value.trim(); const date=$('fDate').value;
+  if(!title||!date){alert('Please enter title and date.');return}
+  const obj={id:editingId||crypto.randomUUID(),title,date,start:$('fStart').value,end:$('fEnd').value,place:$('fPlace').value.trim(),category:$('fCategory').value};
+  if(editingId){const i=events.findIndex(x=>x.id===editingId);events[i]=obj}else events.push(obj);
+  persist();closeModal();
+}
+window.deleteEvent=()=>{if(!editingId)return;if(confirm('Delete this event?')){events=events.filter(e=>e.id!==editingId);persist();closeModal()}}
+
+function persist(){
+  localStorage.setItem('prajaSimpleEvents',JSON.stringify(events));render();pushCloud();
+}
+
+async function firebaseLib(){
+ const a=await import('https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js');
+ const f=await import('https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js');
+ const u=await import('https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js');
+ return {...a,...f,...u}
+}
 async function startFirebase(){
  try{
-   F=await initFirebaseLib();
-   const app=F.initializeApp(firebaseConfig);
-   db=F.getFirestore(app);
-   auth=F.getAuth(app);
+   F=await firebaseLib(); const app=F.initializeApp(firebaseConfig); db=F.getFirestore(app); auth=F.getAuth(app);
    F.onAuthStateChanged(auth,user=>{
-     if(user){
-       $('loginBtn').style.display='none';
-       $('logoutBtn').style.display='inline-block';
-       $('userEmail').textContent=user.email || '';
-       startCloudSync();
-     }else{
-       if(firebaseUnsub){firebaseUnsub();firebaseUnsub=null;}
-       $('loginBtn').style.display='inline-block';
-       $('logoutBtn').style.display='none';
-       $('userEmail').textContent='';
-       $('statusDot').classList.remove('on');
-       $('statusText').textContent='Not signed in';
-     }
+     if(user){$('loginBtn').textContent='Sign out';$('loginBtn').onclick=logoutGoogle;startSync()}
+     else{$('loginBtn').textContent='Google sign-in';$('loginBtn').onclick=loginGoogle;if(unsub){unsub();unsub=null}$('dot').classList.remove('on');$('syncText').textContent='Local'}
    });
- }catch(e){
-   console.error(e);
-   $('statusText').textContent='Firebase error';
- }
+ }catch(e){console.error(e);$('syncText').textContent='Firebase error'}
 }
-
-window.loginGoogle=async()=>{
- try{
-   const provider=new F.GoogleAuthProvider();
-   await F.signInWithPopup(auth,provider);
- }catch(e){
-   alert('Google sign-in failed: '+e.message+'\n\nIf this page is on GitHub Pages, add your github.io domain in Firebase Authentication → Settings → Authorized domains.');
- }
-};
-
-window.logoutGoogle=async()=>{ if(auth) await F.signOut(auth); };
-
-window.forceKST=async()=>{
-  const conv = t => {
-    const m={'07:15':'09:15','09:00':'11:00','09:05':'11:05','13:00':'15:00','14:45':'16:45','15:40':'17:40'};
-    return m[t] || t;
-  };
-  courses=courses.map(c=>({...c,start:conv(c.start),end:conv(c.end)}));
-  localStorage.setItem('prajaTeachingCourses',JSON.stringify(courses));
-  renderAll();
-  if(db && F && auth?.currentUser){
-    await F.setDoc(F.doc(db,'schedules','praja-teaching'),{courses,updatedAt:F.serverTimestamp()});
-    $('statusText').textContent='Cloud synced · KST fixed';
-    $('statusDot').classList.add('on');
-  }
-};
-
-
-function startCloudSync(){
- if(firebaseUnsub) firebaseUnsub();
- const ref=F.doc(db,'schedules','praja-teaching');
- firebaseUnsub=F.onSnapshot(ref,async snap=>{
+window.loginGoogle=async()=>{try{await F.signInWithPopup(auth,new F.GoogleAuthProvider())}catch(e){alert(e.message)}}
+window.logoutGoogle=async()=>{if(auth)await F.signOut(auth)}
+function startSync(){
+ if(unsub)unsub();
+ const ref=F.doc(db,'schedules','praja-simple-calendar');
+ unsub=F.onSnapshot(ref,async snap=>{
    if(snap.exists()){
-     let cloud=snap.data().courses;
-     if(Array.isArray(cloud)){
-       // One-time migration: convert previously saved WIB times to Korea time (KST, +2h).
-       let changed=false;
-       cloud=cloud.map(c=>{
-         const x={...c};
-         if(x.start==='13:00' && x.end==='14:45'){ x.start='15:00'; x.end='16:45'; changed=true; }
-         if(x.start==='07:15' && x.end==='09:00'){ x.start='09:15'; x.end='11:00'; changed=true; }
-         if(x.start==='09:05' && x.end==='15:40'){ x.start='11:05'; x.end='17:40'; changed=true; }
-         return x;
-       });
-       courses=cloud;
-       localStorage.setItem('prajaTeachingCourses',JSON.stringify(courses));
-       renderAll();
-       if(changed){
-         await F.setDoc(ref,{courses,updatedAt:F.serverTimestamp()});
-         $('statusText').textContent='Cloud synced · WIB → KST updated';
-       }
-     }
-   }else{
-     await F.setDoc(ref,{courses,updatedAt:F.serverTimestamp()});
-   }
-   $('statusDot').classList.add('on');
-   if($('statusText').textContent==='Not signed in') $('statusText').textContent='Cloud synced';
- },err=>{
-   console.error(err);
-   $('statusDot').classList.remove('on');
-   $('statusText').textContent='Sync blocked by Firestore Rules';
- });
+     const cloud=snap.data().events;
+     if(Array.isArray(cloud)){events=cloud;localStorage.setItem('prajaSimpleEvents',JSON.stringify(events));render()}
+   }else await F.setDoc(ref,{events,updatedAt:F.serverTimestamp()});
+   $('dot').classList.add('on');$('syncText').textContent='Live sync';
+ },e=>{$('dot').classList.remove('on');$('syncText').textContent='Sync blocked';console.error(e)})
 }
-
 async function pushCloud(){
- try{
-   if(!db||!F||!auth?.currentUser) return;
-   await F.setDoc(F.doc(db,'schedules','praja-teaching'),{courses,updatedAt:F.serverTimestamp()});
- }catch(e){console.error(e)}
+ if(!db||!auth?.currentUser||!F)return;
+ await F.setDoc(F.doc(db,'schedules','praja-simple-calendar'),{events,updatedAt:F.serverTimestamp()});
 }
-
-renderAll();
-startFirebase();
+render();startFirebase();
 </script>
 </body>
 </html>
