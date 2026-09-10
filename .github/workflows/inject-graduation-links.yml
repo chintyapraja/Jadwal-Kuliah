@@ -1,0 +1,37 @@
+name: Inject graduation document links
+
+on:
+  push:
+    paths:
+      - '.github/workflows/inject-graduation-links.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update Graduation tab links and readability
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text()
+          s = s.replace('.deadline-note{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.45}', '.deadline-note{font-size:13px;color:#33434d;margin-top:4px;line-height:1.5;font-weight:650}')
+          s = s.replace('.mini-table{width:100%;border-collapse:collapse;font-size:13px}', '.mini-table{width:100%;border-collapse:collapse;font-size:14px}')
+          s = s.replace('.mini-table th{color:#5a6c77;font-size:12px}', '.mini-table th{color:#33434d;font-size:13px;font-weight:850}')
+          marker = '<div class="grad-card"><h3>Application documents · by Oct 7</h3>'
+          if marker in s and 'Graduation Documents & Forms' not in s:
+              insert = '''<div class="grad-card"><h3>Graduation Documents & Forms</h3><p class="deadline-note">Open the official forms and the document list directly from here.</p><p><a class="btn primary" href="graduation-documents.html" target="_blank" rel="noopener">Open document list</a> <a class="btn" href="https://civil.pusan.ac.kr/civil/10881/subview.do?enc=Zm5jdDF8QEB8JTJGYmJzJTJGY2l2aWwlMkYxMzMzJTJGMTQ2MTU1MiUyRmFydGNsVmlldy5kbyUzRnBhZ2UlM0QxJTI2ZmluZFR5cGUlM0QlMjZmaW5kV29yZCUzRCUyNmZpbmRDbFNlcSUzRCUyNmZpbmRPcG53cmQlM0QlMjZyZ3NCZ25kZVN0ciUzRCUyNnJnc0VuZGRlU3RyJTNEJTI2cGFzc3dvcmQlM0QlMjY%3D" target="_blank" rel="noopener">Official PNU notice</a></p><table class="mini-table"><tr><th>Document</th><th>Use</th><th>Link</th></tr><tr><td><strong>1-1</strong> Dissertation Examination Request Form + CV</td><td>Prepare now</td><td><a href="graduation-documents.html" target="_blank">Open</a></td></tr><tr><td><strong>1-2</strong> Research Ethics Compliance Pledge</td><td>Prepare now</td><td><a href="graduation-documents.html" target="_blank">Open</a></td></tr><tr><td><strong>1-5</strong> Dissertation Examination Committee Member List</td><td>Prepare now</td><td><a href="graduation-documents.html" target="_blank">Open</a></td></tr><tr><td><strong>1-4</strong> External Examiner Consent</td><td>If applicable</td><td><a href="graduation-documents.html" target="_blank">Open</a></td></tr><tr><td><strong>3-1</strong> PhD Examination Procedure</td><td>Reference</td><td><a href="graduation-documents.html" target="_blank">Open</a></td></tr><tr><td><strong>3-3</strong> Dissertation Writing Guide</td><td>Reference</td><td><a href="graduation-documents.html" target="_blank">Open</a></td></tr><tr><td><strong>4-2</strong> PhD Examination Result Report</td><td>Later</td><td><a href="graduation-documents.html" target="_blank">Open</a></td></tr></table></div>'''
+              s = s.replace(marker, insert + marker)
+          p.write_text(s)
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Add graduation document links to planner" || exit 0
+          git push
