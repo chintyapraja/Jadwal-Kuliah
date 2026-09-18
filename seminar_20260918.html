@@ -103,8 +103,38 @@ li{margin:.28em 0}
 .tree-focus .focusbox{background:#fff;border:1px solid var(--line);border-radius:13px;padding:10px 12px;margin:9px 0}
 .tree-focus .arrowdown{text-align:center;font-size:28px;color:var(--blue);line-height:1}
 
-@media (max-width:1200px){
-  .two-col,.three-col,.four-col,.col-6040,.col-4060,.varhead,.contents-grid,.gridlist,.compare,.flow,.coral-row,.gapgrid,.tree-wrap{grid-template-columns:1fr !important}
+
+.structure-slide{padding-top:2.4vh;padding-bottom:4.5vh}
+.structure-slide .hdr{margin-bottom:1vh;padding-bottom:7px}
+.structure-slide .hdr h1{font-size:clamp(26px,2.5vw,42px)}
+.structure-slide .num{width:42px;height:42px;font-size:19px}
+.structure-slide .tree-wrap{grid-template-columns:1.38fr .62fr;gap:14px;align-items:start}
+.structure-slide .tree{padding:11px 15px}
+.structure-slide .tree-root{font-size:19px;margin-bottom:6px}
+.structure-slide .tree-group{margin-top:3px;padding-left:22px}
+.structure-slide .tree-group::before{left:7px;bottom:7px}
+.structure-slide .tree-node{margin:3px 0;padding-left:14px;font-size:14.5px;line-height:1.16}
+.structure-slide .tree-node::before{left:-14px;top:9px;width:14px}
+.structure-slide .tree-sub{margin:2px 0 2px 9px;padding-left:20px}
+.structure-slide .tree-sub::before{left:6px;bottom:6px}
+.structure-slide .tree-leaf{margin:1px 0;padding-left:13px;font-size:12.8px;line-height:1.16}
+.structure-slide .tree-leaf::before{left:-13px;top:7px;width:13px}
+.structure-slide .tree .tag{font-size:11px;padding:2px 7px;margin-bottom:2px}
+.structure-slide .tree-focus{padding:10px 12px}
+.structure-slide .tree-focus h3{font-size:17px;margin-bottom:4px}
+.structure-slide .tree-focus .focusbox{padding:7px 9px;margin:5px 0;font-size:13px}
+.structure-slide .tree-focus .small{font-size:11.5px;line-height:1.2}
+.structure-slide .tree-focus .arrowdown{font-size:20px}
+.structure-slide .tree-focus .callout{font-size:12px;padding:9px 10px;margin-top:7px!important}
+@media (max-height:800px){
+  .structure-slide .tree-focus{display:none}
+  .structure-slide .tree-wrap{grid-template-columns:1fr}
+  .structure-slide .tree-root{font-size:17px}
+  .structure-slide .tree-node{font-size:13.5px}
+  .structure-slide .tree-leaf{font-size:11.7px}
+}
+\n@media (max-width:1200px){
+  .two-col,.three-col,.four-col,.col-6040,.col-4060,.varhead,.contents-grid,.compare,.flow,.coral-row,.gapgrid{grid-template-columns:1fr !important}\n  .structure-slide .tree-wrap{grid-template-columns:1fr !important}\n  .structure-slide .tree-focus{display:none}
   .flow .step:not(:last-child)::after{display:none}
   body{overflow:auto}
   .slide{position:relative;display:block;height:auto;min-height:100vh}
