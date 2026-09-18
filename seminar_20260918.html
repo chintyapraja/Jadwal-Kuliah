@@ -1,0 +1,905 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Satellite-Based Coral Reef Stress Assessment in Indonesia</title>
+<style>
+:root{
+  --navy:#0b3767; --blue:#1e62a7; --light:#f4f8fb; --line:#d8e2ee; --ink:#20374d; --muted:#65788d;
+  --thermal:#d05555; --optical:#d19a22; --wq:#2b8c7a; --soft:#edf5fb; --soft2:#f9fbfd;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#e9f1f7;color:var(--ink);overflow:hidden}
+.deck{width:100vw;height:100vh;position:relative}
+.slide{display:none;position:absolute;inset:0;padding:3.6vh 4.2vw 7vh;background:linear-gradient(125deg,#ffffff 0%,#ffffff 72%,#eef5fb 100%)}
+.slide.active{display:block}
+.slide-inner{max-width:1500px;height:100%;margin:0 auto;position:relative}
+.hdr{display:flex;align-items:flex-start;gap:16px;border-bottom:2px solid var(--navy);padding-bottom:10px;margin-bottom:1.8vh}
+.num{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:var(--navy);color:#fff;font-weight:700;font-size:22px;flex:0 0 auto}
+.hdrsmall{font-size:14px;letter-spacing:.04em;color:var(--muted);text-transform:uppercase;margin-bottom:2px}
+h1{font-size:clamp(30px,3.1vw,54px);line-height:1.08;margin:0;color:var(--navy)}
+h2{font-size:clamp(22px,2vw,34px);line-height:1.15;margin:0 0 8px;color:var(--navy)}
+h3{font-size:clamp(18px,1.5vw,24px);margin:0 0 6px;color:var(--navy)}
+p,li,td,th{font-size:clamp(16px,1.18vw,21px);line-height:1.34}
+p{margin:.2em 0 .6em}
+ul{margin:.25em 0 .4em;padding-left:1.2em}
+li{margin:.28em 0}
+.small{font-size:clamp(13px,0.95vw,16px);color:var(--muted)}
+.xsmall{font-size:12px;color:var(--muted)}
+.center{text-align:center}
+.two-col{display:grid;grid-template-columns:1.05fr .95fr;gap:24px;align-items:start}
+.three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.four-col{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.col-6040{display:grid;grid-template-columns:1.2fr .8fr;gap:20px}
+.col-4060{display:grid;grid-template-columns:.85fr 1.15fr;gap:20px}
+.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px 18px;box-shadow:0 2px 10px rgba(31,56,83,.05)}
+.card.soft{background:var(--soft)}
+.callout{background:#e8f2fb;border-left:6px solid var(--blue);padding:14px 16px;border-radius:12px;font-weight:700;color:var(--navy)}
+.key{background:#eef6ff;border:1px solid #cfe1f3;border-radius:14px;padding:12px 14px}
+.tag{display:inline-block;font-size:14px;font-weight:700;padding:4px 10px;border-radius:999px;margin-bottom:8px}
+.tag.thermal{background:#f9e5e5;color:#983a3a}.tag.optical{background:#fcf1d6;color:#a06c09}.tag.wq{background:#ddf3ef;color:#146b5c}.tag.blue{background:#e6f0fb;color:#0b3767}
+.table{width:100%;border-collapse:collapse}
+.table th,.table td{border:1px solid var(--line);padding:10px 10px;vertical-align:top}
+.table th{background:#edf4fb;color:var(--navy);font-weight:700}
+.mini-table td,.mini-table th{font-size:15px;padding:8px}
+.imgbox{background:#fff;border:1px solid var(--line);border-radius:18px;padding:10px;box-shadow:0 2px 10px rgba(31,56,83,.05)}
+.imgbox img{width:100%;display:block;border-radius:12px}
+.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;align-items:stretch;margin-top:10px}
+.flow .step{position:relative;background:#fff;border:2px solid #d4e0ed;border-radius:18px;padding:14px 16px}
+.flow .step:not(:last-child)::after{content:'➜';position:absolute;right:-20px;top:42%;font-size:32px;color:var(--blue);font-weight:700}
+.gridlist{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.kicker{font-size:16px;color:var(--muted);margin-top:6px}
+.source{position:absolute;left:0;right:0;bottom:.2vh;color:#74889d;font-size:11px}
+.nav{position:fixed;right:18px;bottom:16px;display:flex;gap:8px;align-items:center;z-index:999}
+.nav button{border:0;border-radius:8px;background:var(--navy);color:#fff;padding:10px 14px;font-size:14px;cursor:pointer}
+.nav button:disabled{opacity:.35;cursor:default}
+.counter{background:#fff;border:1px solid var(--line);border-radius:8px;padding:9px 12px;color:var(--navy);font-weight:700}
+.progress{position:fixed;left:0;bottom:0;height:5px;background:var(--blue);z-index:998}
+.title-slide{display:grid;grid-template-columns:1.15fr .85fr;gap:34px;align-items:center;height:100%}
+.bigtitle{font-size:clamp(46px,5vw,86px);line-height:1.02;color:var(--navy);margin:0 0 14px}
+.subtitle{font-size:clamp(22px,1.9vw,31px);color:#35597f;line-height:1.25;margin-bottom:14px}
+.meta{font-size:clamp(16px,1.15vw,20px);line-height:1.45;color:#38536c}
+.hero{background:linear-gradient(180deg,#dcecf9 0%,#f6fbff 100%);border:1px solid var(--line);border-radius:28px;padding:18px;min-height:58vh;display:flex;align-items:center;justify-content:center}
+.contents-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:8px}
+.contents-item{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 16px}
+.contents-item .n{font-size:14px;font-weight:700;color:var(--muted);margin-bottom:6px}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.compare .panel{background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px}
+.compare .panel.old{border-top:6px solid #a7b6c6}.compare .panel.new{border-top:6px solid var(--blue)}
+.coral-row{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:12px}
+.stage{background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px;text-align:center}
+.stage svg{width:100%;height:220px}
+.bigstat{font-size:44px;font-weight:800;color:var(--navy);line-height:1}
+.gapgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.gapbox{background:#eef6ff;border:1px solid #cfe1f3;border-radius:18px;padding:16px}
+.gapcircle{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:var(--navy);color:#fff;font-weight:800;margin-bottom:10px}
+.varhead{display:grid;grid-template-columns:1fr .95fr;gap:18px}
+.varcards{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:8px}
+.meter{display:flex;gap:0;border-radius:999px;overflow:hidden;border:1px solid var(--line);height:22px}
+.meter span{flex:1}
+.sstack{display:grid;gap:12px}
+.note{font-size:15px;background:#f5f9fc;border-radius:12px;padding:10px 12px;border:1px solid var(--line)}
+.svgwrap{background:#fff;border:1px solid var(--line);border-radius:18px;padding:10px}
+.svgwrap svg{width:100%;height:100%}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:14px;color:var(--muted)}
+.dot{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;vertical-align:middle}
+.footerbox{background:#eef6ff;border:1px solid #cfe1f3;border-radius:18px;padding:18px}
+
+.tree-wrap{display:grid;grid-template-columns:1.25fr .75fr;gap:22px;align-items:start}
+.tree{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px 22px;box-shadow:0 2px 10px rgba(31,56,83,.05);font-family:Arial,Helvetica,sans-serif}
+.tree-root{font-size:25px;font-weight:800;color:var(--navy);margin-bottom:12px}
+.tree-group{margin:8px 0 0 0;padding-left:28px;position:relative}
+.tree-group::before{content:'';position:absolute;left:9px;top:0;bottom:12px;border-left:2px solid #9fb6cc}
+.tree-node{position:relative;margin:8px 0;padding-left:18px;font-size:18px;line-height:1.28}
+.tree-node::before{content:'';position:absolute;left:-18px;top:12px;width:18px;border-top:2px solid #9fb6cc}
+.tree-node strong{color:var(--navy)}
+.tree-sub{margin:5px 0 3px 14px;padding-left:25px;position:relative}
+.tree-sub::before{content:'';position:absolute;left:7px;top:0;bottom:10px;border-left:1.5px solid #bccbd9}
+.tree-leaf{position:relative;margin:4px 0;padding-left:17px;font-size:16px;color:#38536c;line-height:1.25}
+.tree-leaf::before{content:'';position:absolute;left:-17px;top:10px;width:17px;border-top:1.5px solid #bccbd9}
+.tree-focus{background:#eef6ff;border:1px solid #cfe1f3;border-radius:18px;padding:16px 18px}
+.tree-focus h3{margin-top:0}
+.tree-focus .focusbox{background:#fff;border:1px solid var(--line);border-radius:13px;padding:10px 12px;margin:9px 0}
+.tree-focus .arrowdown{text-align:center;font-size:28px;color:var(--blue);line-height:1}
+
+@media (max-width:1200px){
+  .two-col,.three-col,.four-col,.col-6040,.col-4060,.varhead,.contents-grid,.gridlist,.compare,.flow,.coral-row,.gapgrid,.tree-wrap{grid-template-columns:1fr !important}
+  .flow .step:not(:last-child)::after{display:none}
+  body{overflow:auto}
+  .slide{position:relative;display:block;height:auto;min-height:100vh}
+  .nav,.progress{display:none}
+}
+</style>
+</head>
+<body>
+<div class="deck">
+
+<section class="slide active">
+  <div class="slide-inner" style="display:flex;align-items:center;justify-content:center;">
+    <div style="width:min(1100px,88vw);text-align:left;">
+      <h1 class="bigtitle" style="margin-bottom:20px;">Satellite-Based Coral Reef Stress Assessment in Indonesia</h1>
+      <div class="subtitle" style="margin-bottom:34px;">Environmental Variables and Coral Bleaching Mechanisms</div>
+      <div class="meta" style="font-size:clamp(20px,1.5vw,26px);"><b>Ni Putu Praja Chintya</b></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="slide-inner">
+    <div class="hdr"><div class="num">02</div><div><div class="hdrsmall">Whole research structure</div><h1>How is the entire stress-assessment study organized?</h1></div></div>
+    <div class="tree-wrap">
+      <div class="tree">
+        <div class="tree-root">Satellite-Based Coral Reef Stress Assessment in Indonesia</div>
+
+        <div class="tree-group">
+          <div class="tree-node"><strong>1. INPUT DATA</strong>
+            <div class="tree-sub">
+              <div class="tree-leaf"><b>Environmental satellite data</b></div>
+              <div class="tree-sub">
+                <div class="tree-leaf"><span class="tag thermal">Thermal</span> SST, SSTA, DHW</div>
+                <div class="tree-leaf"><span class="tag optical">Optical</span> PAR, Kd(490)</div>
+                <div class="tree-leaf"><span class="tag wq">Water quality</span> Kd(490), Chl-a</div>
+              </div>
+              <div class="tree-leaf"><b>Reef reference data</b></div>
+              <div class="tree-sub">
+                <div class="tree-leaf">reef location / reef mask</div>
+                <div class="tree-leaf">bleached observation (BO)</div>
+                <div class="tree-leaf">non-bleached observation (BX)</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tree-node"><strong>2. TEMPORAL DATA CONSTRUCTION</strong>
+            <div class="tree-sub">
+              <div class="tree-leaf">match each observation by date + location</div>
+              <div class="tree-leaf">extract the previous 26 weeks</div>
+              <div class="tree-leaf">construct the weekly environmental sequence</div>
+            </div>
+          </div>
+
+          <div class="tree-node"><strong>3. TEMPORAL MODEL</strong>
+            <div class="tree-sub">
+              <div class="tree-leaf">Mamba encoder reads the sequence in time order</div>
+              <div class="tree-leaf">learns short-term changes and longer environmental history</div>
+            </div>
+          </div>
+
+          <div class="tree-node"><strong>4. STRESS INTERPRETATION</strong>
+            <div class="tree-sub">
+              <div class="tree-leaf">thermal pathway</div>
+              <div class="tree-leaf">optical pathway</div>
+              <div class="tree-leaf">water-quality pathway</div>
+            </div>
+          </div>
+
+          <div class="tree-node"><strong>5. STRESS ASSESSMENT</strong>
+            <div class="tree-sub">
+              <div class="tree-leaf">pathway stress scores</div>
+              <div class="tree-leaf">one continuous environmental stress index</div>
+            </div>
+          </div>
+
+          <div class="tree-node"><strong>6. EVALUATION</strong>
+            <div class="tree-sub">
+              <div class="tree-leaf">bleaching probability</div>
+              <div class="tree-leaf">BO versus BX discrimination</div>
+              <div class="tree-leaf">geographic validation and regional interpretation</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tree-focus">
+        <h3>How to read this slide</h3>
+        <div class="focusbox"><b>Start with observations</b><br><span class="small">We have satellite environmental data and reef observations.</span></div>
+        <div class="arrowdown">↓</div>
+        <div class="focusbox"><b>Build history</b><br><span class="small">For each reef observation, we collect the previous 26 weeks.</span></div>
+        <div class="arrowdown">↓</div>
+        <div class="focusbox"><b>Learn stress pathways</b><br><span class="small">The model reads the history and separates thermal, optical, and water-quality information.</span></div>
+        <div class="arrowdown">↓</div>
+        <div class="focusbox"><b>Produce one stress estimate</b><br><span class="small">Only after this step do we give the continuous index a name.</span></div>
+        <div class="callout" style="margin-top:12px"><b>Important:</b> this slide shows the structure first. The name <b>CRESI</b> is introduced only after the stress-index concept is clear.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="slide-inner">
+    <div class="hdr"><div class="num">03</div><div><div class="hdrsmall">Seminar route</div><h1>What will be covered today?</h1></div></div>
+    <div class="contents-grid">
+      <div class="contents-item"><div class="n">1. Framework</div><h3>Overall structure</h3><p>See how satellite data, reef observations, CRESI, and the pathway outputs connect.</p></div>
+      <div class="contents-item"><div class="n">2. Main idea</div><h3>Stress assessment</h3><p>Why we move from event detection toward a continuous stress description.</p></div>
+      <div class="contents-item"><div class="n">3. Biology</div><h3>Bleaching concept</h3><p>What bleaching means, and the difference between bleached and non-bleached reefs.</p></div>
+      <div class="contents-item"><div class="n">4. Motivation</div><h3>Previous studies and gaps</h3><p>What earlier studies found, and why an integrated framework is still needed.</p></div>
+      <div class="contents-item"><div class="n">5. Today’s core</div><h3>Environmental variables</h3><p>SST, SSTA, MMM, HotSpot, DHW, PAR, Kd(490), and Chl-a.</p></div>
+      <div class="contents-item"><div class="n">6. End point</div><h3>Example and next seminar</h3><p>See one result example, the main take-home points, and what comes next.</p></div>
+    </div>
+    <div class="footerbox" style="margin-top:18px">
+      <b>Main question for today:</b> <i>How do we turn real satellite environmental data into an interpretable assessment of coral reef stress?</i>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="slide-inner">
+    <div class="hdr"><div class="num">04</div><div><div class="hdrsmall">Main idea</div><h1>From event detection to stress assessment</h1></div></div>
+    <div class="compare">
+      <div class="panel old">
+        <div class="tag blue">Traditional question</div>
+        <h2>Did bleaching happen?</h2>
+        <ul>
+          <li>Often based on one main thermal metric, especially <b>DHW</b>.</li>
+          <li>Focuses on whether a threshold was crossed.</li>
+          <li>Very useful for operational warning systems.</li>
+          <li>But it gives limited information about <b>which environmental conditions</b> produced the stress.</li>
+        </ul>
+      </div>
+      <div class="panel new">
+        <div class="tag blue">This study</div>
+        <h2>How stressed is the reef, and why?</h2>
+        <ul>
+          <li>Uses a <b>26-week environmental history</b>, not a single day.</li>
+          <li>Combines <b>thermal, optical, and water-quality</b> information.</li>
+          <li>Produces a <b>continuous stress score</b> instead of only alert / no alert.</li>
+          <li>Separates the result into pathways so the stress is more interpretable.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:18px">The core idea is simple: bleaching is the visible outcome, but we want one continuous index that describes the environmental stress process leading to that outcome.</div>
+    <div class="footerbox" style="margin-top:12px"><b>After defining this idea, I named the index:</b> <span style="color:var(--navy);font-size:1.15em"><b>Coral Reef Environmental Stress Index (CRESI)</b></span>.</div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="slide-inner">
+    <div class="hdr"><div class="num">05</div><div><div class="hdrsmall">Bleaching concept</div><h1>What is coral bleaching?</h1></div></div>
+    <p><b>Healthy corals</b> live with microscopic algae, often called <b>zooxanthellae</b> or <b>Symbiodiniaceae</b>, inside their tissue. These symbionts provide much of the coral’s energy through photosynthesis.</p>
+    <div class="coral-row">
+      <div class="stage">
+        <div class="tag blue">Stage 1</div>
+        <h3>Healthy symbiosis</h3>
+        <svg viewBox="0 0 300 220">
+          <rect x="0" y="110" width="300" height="110" fill="#82cae4"/>
+          <circle cx="46" cy="36" r="20" fill="#ffd85e" stroke="#f2be18" stroke-width="3"/>
+          <path d="M95 165 C95 125,115 105,132 100 C140 112,138 130,132 148 C144 138,159 132,172 132 C174 144,166 156,154 164 C166 160,181 160,192 167 C189 179,175 186,158 188 C135 191,109 185,95 165Z" fill="#ef8f8f" stroke="#df7777" stroke-width="4"/>
+          <g fill="#7a57c2"><circle cx="122" cy="152" r="11"/><circle cx="144" cy="150" r="9"/><circle cx="160" cy="162" r="9"/></g>
+          <text x="150" y="32" text-anchor="middle" font-size="18" font-weight="700" fill="#0b3767">Coral tissue + symbionts</text>
+          <text x="150" y="59" text-anchor="middle" font-size="15" fill="#35597f">Color present, photosynthesis works</text>
+        </svg>
+      </div>
+      <div class="stage">
+        <div class="tag blue">Stage 2</div>
+        <h3>Environmental stress</h3>
+        <svg viewBox="0 0 300 220">
+          <rect x="0" y="110" width="300" height="110" fill="#82cae4"/>
+          <circle cx="36" cy="36" r="20" fill="#ffd85e" stroke="#f2be18" stroke-width="3"/>
+          <text x="260" y="52" font-size="36">🌡️</text>
+          <path d="M95 165 C95 125,115 105,132 100 C140 112,138 130,132 148 C144 138,159 132,172 132 C174 144,166 156,154 164 C166 160,181 160,192 167 C189 179,175 186,158 188 C135 191,109 185,95 165Z" fill="#ef8f8f" stroke="#df7777" stroke-width="4"/>
+          <g fill="#7a57c2"><circle cx="122" cy="152" r="11"/><circle cx="144" cy="150" r="9"/><circle cx="160" cy="162" r="9"/></g>
+          <text x="150" y="40" text-anchor="middle" font-size="18" font-weight="700" fill="#0b3767">Heat / light / water-quality stress</text>
+          <text x="150" y="64" text-anchor="middle" font-size="15" fill="#35597f">Photosynthetic stress → ROS increase</text>
+          <text x="150" y="104" text-anchor="middle" font-size="48" fill="#f08a00">⚡</text>
+          <text x="150" y="128" text-anchor="middle" font-size="16" fill="#35597f">Reactive oxygen species (ROS)</text>
+        </svg>
+      </div>
+      <div class="stage">
+        <div class="tag blue">Stage 3</div>
+        <h3>Bleached coral</h3>
+        <svg viewBox="0 0 300 220">
+          <rect x="0" y="110" width="300" height="110" fill="#82cae4"/>
+          <path d="M95 165 C95 125,115 105,132 100 C140 112,138 130,132 148 C144 138,159 132,172 132 C174 144,166 156,154 164 C166 160,181 160,192 167 C189 179,175 186,158 188 C135 191,109 185,95 165Z" fill="#f3f2ef" stroke="#b6b6b6" stroke-width="4"/>
+          <circle cx="118" cy="145" r="4" fill="#7a57c2" opacity=".2"/><circle cx="144" cy="149" r="4" fill="#7a57c2" opacity=".2"/><circle cx="163" cy="160" r="4" fill="#7a57c2" opacity=".2"/>
+          <text x="150" y="32" text-anchor="middle" font-size="18" font-weight="700" fill="#0b3767">Symbionts expelled or lost</text>
+          <text x="150" y="59" text-anchor="middle" font-size="15" fill="#35597f">Coral looks pale or white</text>
+          <text x="150" y="196" text-anchor="middle" font-size="14" fill="#35597f">Bleaching can be reversible, but prolonged bleaching can lead to death.</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="slide-inner">
+    <div class="hdr"><div class="num">06</div><div><div class="hdrsmall">Reference observations</div><h1>Bleached versus non-bleached in this study</h1></div></div>
+    <div class="two-col">
+      <div class="card">
+        <h2>What do the labels mean?</h2>
+        <div class="gridlist">
+          <div class="key">
+            <div class="tag thermal">BO</div>
+            <h3>Bleached observation</h3>
+            <ul>
+              <li>The reef showed visible bleaching.</li>
+              <li>Coral tissue looked pale or white.</li>
+              <li>Used as the positive class during training and evaluation.</li>
+            </ul>
+          </div>
+          <div class="key">
+            <div class="tag blue">BX</div>
+            <h3>Non-bleached observation</h3>
+            <ul>
+              <li>No visible bleaching was reported at that observation.</li>
+              <li>Used as the comparison class.</li>
+              <li>Important for learning what low-stress versus high-stress conditions look like.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="callout" style="margin-top:12px">One training sample = <b>one reef observation</b> with a date, location, label (BO or BX), and the previous 26-week environmental history.</div>
+      </div>
+      <div class="card soft">
+        <h2>Simple “before and after” concept</h2>
+        <div class="three-col">
+          <div class="key center"><div class="tag blue">Before</div><div style="font-size:72px;line-height:1">🪸</div><p><b>Non-bleached</b><br>normal pigmentation<br>symbionts still present</p></div>
+          <div class="key center"><div class="tag blue">Stress</div><div style="font-size:72px;line-height:1">☀️🌡️</div><p><b>Trigger</b><br>heat, light, water quality<br>increase stress burden</p></div>
+          <div class="key center"><div class="tag blue">After</div><div style="font-size:72px;line-height:1">🤍🪸</div><p><b>Bleached</b><br>pale or white coral<br>symbionts lost or expelled</p></div>
+        </div>
+        <p class="small" style="margin-top:12px">This slide is a concept illustration. In practice, the BO and BX labels come from independent reef-scale reference observations.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="slide-inner">
+    <div class="hdr"><div class="num">07</div><div><div class="hdrsmall">Current practice</div><h1>Operational monitoring still relies mainly on heat</h1></div></div>
+    <div class="col-4060">
+      <div>
+        <div class="card">
+          <h2>What is used now?</h2>
+          <ul>
+            <li><b>NOAA Coral Reef Watch</b> provides daily 5-km thermal products.</li>
+            <li>The main thermal products are <b>SST</b>, <b>HotSpot</b>, and <b>DHW</b>.</li>
+            <li>These products are the operational standard for large-scale bleaching alerts.</li>
+          </ul>
+          <h3>Why is this not enough by itself?</h3>
+          <ul>
+            <li>Thermal products focus on heat exposure.</li>
+            <li>But bleaching can also be modified by light, clarity, and water quality.</li>
+            <li>Heat is essential, but it is not always the whole explanation.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="imgbox">
+        <img src="https://www.coralreefwatch.noaa.gov/data_current/5km/v3.1_op/daily/png/ct5km_baa_v3.1_pac_current.png" alt="NOAA Coral Reef Watch bleaching alert map">
+        <div class="kicker center">Example of the NOAA Coral Reef Watch bleaching alert product family.</div>
+      </div>
+    </div>
+    <div class="source">Real image source shown in the preliminary presentation: NOAA Coral Reef Watch bleaching alert area map.</div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="slide-inner">
+    <div class="hdr"><div class="num">08</div><div><div class="hdrsmall">Previous evidence</div><h1>Previous studies already show that non-thermal conditions matter</h1></div></div>
+    <div class="two-col">
+      <div class="card">
+        <div class="tag optical">Light / PAR</div>
+        <h2>High light can make bleaching worse</h2>
+        <ul>
+          <li><b>Downs et al. (2013):</b> heat-only and light-only each caused damage, but <b>combined heat + light</b> caused both damage pathways.</li>
+          <li><b>Srisoontorn et al. (2022):</b> high temperature + high light produced strong loss of symbionts and pigments.</li>
+          <li><b>Meaning:</b> when temperature is already high, strong light can amplify photo-oxidative stress.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="tag optical">Water clarity / Kd(490)</div>
+        <h2>Clarity changes how much light reaches the coral</h2>
+        <ul>
+          <li><b>Sully &amp; van Woesik (2020):</b> across 3,694 reef sites, moderate turbidity reduced bleaching during thermal stress.</li>
+          <li><b>Mechanism:</b> stronger light attenuation means less irradiance reaches the coral, so photodamage can be reduced.</li>
+          <li><b>Meaning:</b> clearer water can increase light stress, while moderate turbidity can provide natural shading.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:18px">Take-home point: <b>temperature is not the only environmental control</b>. The surrounding light field also matters.</div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="slide-inner">
+    <div class="hdr"><div class="num">09</div><div><div class="hdrsmall">Previous evidence</div><h1>Water quality can also modify bleaching susceptibility</h1></div></div>
+    <div class="two-col">
+      <div class="card">
+        <div class="tag wq">Nutrients / water quality</div>
+        <h2>Nutrient imbalance can lower bleaching resistance</h2>
+        <ul>
+          <li><b>Donovan et al. (2020):</b> under relatively low heat stress, high nitrogen pollution increased bleaching severity by about twofold.</li>
+          <li><b>Wiedenmann et al. (2013):</b> nutrient imbalance increased susceptibility to temperature- and light-induced bleaching.</li>
+          <li><b>Meaning:</b> even at the same temperature, reefs in nutrient-enriched water can bleach more easily.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="tag wq">Chl-a / productivity</div>
+        <h2>Productivity can also play a role</h2>
+        <ul>
+          <li><b>Keighan et al. (2023):</b> moderate Chl-a was associated with lower bleaching prevalence during a thermal event.</li>
+          <li><b>Meaning:</b> not all productivity effects point in one direction. Some conditions may worsen stress, but moderate productivity can sometimes be protective.</li>
+          <li>This is one reason the environmental response should be <b>learned from data</b>, not assumed from one fixed rule.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:18px">Take-home point: non-thermal environmental conditions can modify bleaching through different mechanisms.</div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="slide-inner">
+    <div class="hdr"><div class="num">10</div><div><div class="hdrsmall">Gaps and objective</div><h1>Why do we still need CRESI?</h1></div></div>
+    <div class="gapgrid">
+      <div class="gapbox"><div class="gapcircle">1</div><h3>Heat alone is incomplete</h3><p>Accumulated heat is essential, but it cannot explain all observed bleaching responses.</p></div>
+      <div class="gapbox"><div class="gapcircle">2</div><h3>Integration is still limited</h3><p>Thermal, optical, and water-quality effects are often discussed separately rather than combined into one interpretable stress estimate.</p></div>
+      <div class="gapbox"><div class="gapcircle">3</div><h3>Validation is needed</h3><p>Regional coral-stress assessments still need clearer evaluation against independent bleaching observations at reefs.</p></div>
+    </div>
+    <div class="two-col" style="margin-top:18px">
+      <div class="card">
+        <h2>Study objective</h2>
+        <p>Develop and evaluate a <b>satellite-based environmental stress index</b> for Indonesian coral reefs by integrating thermal, optical, and water-quality histories.</p>
+      </div>
+      <div class="card soft">
+        <h2>Important naming</h2>
+        <ul>
+          <li><b>CRESI</b> = Coral Reef Environmental Stress Index</li>
+          <li><b>Mamba</b> = temporal model used to read the 26-week sequence</li>
+          <li><b>CRESI-Mamba</b> = one implementation used to estimate the CRESI stress score</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="slide-inner">
+    <div class="hdr"><div class="num">11</div><div><div class="hdrsmall">Input overview</div><h1>Environmental variables used in this study</h1></div></div>
+    <table class="table mini-table">
+      <tr><th>Group</th><th>Variable</th><th>Meaning</th><th>Main source</th><th>Typical resolution</th><th>Unit</th></tr>
+      <tr><td rowspan="3"><span class="tag thermal">Thermal</span></td><td><b>SST</b></td><td>Sea-surface temperature</td><td>NOAA Coral Reef Watch</td><td>5 km, daily</td><td>°C</td></tr>
+      <tr><td><b>SSTA</b></td><td>Temperature anomaly relative to climatology</td><td>NOAA Coral Reef Watch</td><td>5 km, daily</td><td>°C</td></tr>
+      <tr><td><b>DHW</b></td><td>Accumulated heat above the bleaching threshold</td><td>NOAA Coral Reef Watch</td><td>5 km, daily</td><td>°C-weeks</td></tr>
+      <tr><td rowspan="2"><span class="tag optical">Optical</span></td><td><b>PAR</b></td><td>Sunlight available for photosynthesis</td><td>NASA VIIRS ocean color</td><td>4 km, 8-day</td><td>Einstein m<sup>-2</sup> day<sup>-1</sup></td></tr>
+      <tr><td><b>Kd(490)</b></td><td>How quickly light decreases with depth</td><td>NASA VIIRS ocean color</td><td>4 km, 8-day</td><td>m<sup>-1</sup></td></tr>
+      <tr><td><span class="tag wq">Water quality</span></td><td><b>Chl-a</b></td><td>Phytoplankton / productivity proxy</td><td>NASA VIIRS ocean color</td><td>4 km, 8-day</td><td>mg m<sup>-3</sup></td></tr>
+    </table>
+    <div class="callout" style="margin-top:16px">From here onward, each variable is explained in the same way: <b>what it is, how it is obtained, the unit, how to read high and low values, and why it matters for coral reefs</b>.</div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="slide-inner">
+    <div class="hdr"><div class="num">12</div><div><div class="hdrsmall">Thermal variable 1</div><h1>SST: Sea Surface Temperature</h1></div></div>
+    <div class="varhead">
+      <div>
+        <div class="card">
+          <h2>What is SST?</h2>
+          <ul>
+            <li><b>SST</b> is the temperature of the sea surface.</li>
+            <li>In this study, SST comes from <b>NOAA Coral Reef Watch</b>.</li>
+            <li>The product is based on satellite sea-surface temperature analyses, delivered at 5-km daily resolution.</li>
+            <li><b>Unit:</b> degrees Celsius (°C).</li>
+          </ul>
+          <h3>How should we read the values?</h3>
+          <ul>
+            <li><b>Higher SST</b> means warmer surface water.</li>
+            <li><b>Lower SST</b> means cooler surface water.</li>
+            <li>But SST alone does <b>not</b> tell us whether the water is unusually warm for that reef.</li>
+          </ul>
+          <div class="callout">Example: <b>29°C</b> may be normal for one reef, but stressful for another. To know whether it is abnormal, we need an anomaly metric.</div>
+        </div>
+      </div>
+      <div class="sstack">
+        <div class="card soft">
+          <h2>Why does SST matter for bleaching?</h2>
+          <ul>
+            <li>Corals live close to their upper thermal limit.</li>
+            <li>When SST becomes too high, photosynthesis in the symbionts is disrupted.</li>
+            <li>This increases oxidative stress and can lead to bleaching.</li>
+          </ul>
+        </div>
+        <div class="svgwrap" style="height:300px">
+          <svg viewBox="0 0 460 300">
+            <rect x="0" y="145" width="460" height="155" fill="#82cae4"/>
+            <path d="M80 230 C80 195, 100 175, 120 168 C126 180,124 194,119 210 C132 202,147 195,160 194 C164 206,157 218,146 226 C157 222,171 223,180 228 C178 239,166 246,152 249 C126 253,95 245,80 230Z" fill="#ef8f8f" stroke="#df7777" stroke-width="4"/>
+            <g fill="#7a57c2"><circle cx="115" cy="217" r="8"/><circle cx="131" cy="212" r="8"/><circle cx="149" cy="224" r="7"/></g>
+            <rect x="248" y="62" width="110" height="112" rx="12" fill="#fff" stroke="#d4e0ed"/>
+            <text x="303" y="96" text-anchor="middle" font-size="18" fill="#0b3767" font-weight="700">SST reading</text>
+            <text x="303" y="125" text-anchor="middle" font-size="36" fill="#d05555" font-weight="700">29.3°C</text>
+            <text x="303" y="151" text-anchor="middle" font-size="14" fill="#35597f">water surface temperature</text>
+            <text x="60" y="48" font-size="48">☀️</text>
+            <text x="373" y="63" font-size="52">🌡️</text>
+            <text x="70" y="272" font-size="15" fill="#35597f">Warmer SST can increase coral stress, but context matters.</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="slide-inner">
+    <div class="hdr"><div class="num">13</div><div><div class="hdrsmall">Thermal variable 2</div><h1>SSTA: Sea Surface Temperature Anomaly</h1></div></div>
+    <div class="two-col">
+      <div class="card">
+        <h2>What is SSTA?</h2>
+        <ul>
+          <li><b>SSTA</b> tells us how much the temperature differs from the expected climatological temperature for that place and time.</li>
+          <li>In simple form: <b>SSTA = observed SST − climatological SST</b>.</li>
+          <li><b>Unit:</b> degrees Celsius (°C).</li>
+        </ul>
+        <h3>How do we read it?</h3>
+        <ul>
+          <li><b>SSTA &gt; 0</b>: warmer than normal</li>
+          <li><b>SSTA = 0</b>: close to normal</li>
+          <li><b>SSTA &lt; 0</b>: cooler than normal</li>
+        </ul>
+        <div class="callout">Example: if SST is <b>29.3°C</b> and the expected climatological value is <b>28.7°C</b>, then <b>SSTA = +0.6°C</b>.</div>
+      </div>
+      <div class="card soft">
+        <h2>Why is SSTA useful?</h2>
+        <ul>
+          <li>It adds <b>local context</b>.</li>
+          <li>The same absolute temperature can mean different stress levels at different reefs.</li>
+        </ul>
+        <table class="table mini-table">
+          <tr><th>Reef</th><th>SST</th><th>Climatological value</th><th>SSTA</th><th>Interpretation</th></tr>
+          <tr><td>Papua</td><td>29.0</td><td>29.2</td><td>-0.2</td><td>slightly cooler than normal</td></tr>
+          <tr><td>Bali</td><td>29.0</td><td>28.6</td><td>+0.4</td><td>warmer than normal</td></tr>
+          <tr><td>Java</td><td>29.0</td><td>28.0</td><td>+1.0</td><td>much warmer than normal</td></tr>
+        </table>
+        <div class="note" style="margin-top:10px">SSTA is a general anomaly metric. The bleaching threshold used by NOAA for DHW comes from <b>HotSpot</b>, which is tied to the <b>MMM</b> baseline and explained next.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="slide-inner">
+    <div class="hdr"><div class="num">14</div><div><div class="hdrsmall">Important baseline</div><h1>MMM and HotSpot: the threshold concept behind DHW</h1></div></div>
+    <div class="two-col">
+      <div class="card">
+        <h2>What is MMM?</h2>
+        <ul>
+          <li><b>MMM</b> = Maximum Monthly Mean.</li>
+          <li>It is the warmest monthly climatological mean for that location.</li>
+          <li>It represents the typical <b>warm-season upper baseline</b>.</li>
+        </ul>
+        <h2>What is HotSpot?</h2>
+        <ul>
+          <li><b>HotSpot = SST − MMM</b></li>
+          <li>If HotSpot is <b>positive</b>, water is above the MMM baseline.</li>
+          <li>For DHW accumulation, only the part <b>above +1°C</b> is counted.</li>
+        </ul>
+        <div class="callout">Example: SST = 30.5°C and MMM = 29.0°C → HotSpot = 1.5°C. This contributes to DHW because it is above +1°C.</div>
+      </div>
+      <div class="svgwrap" style="height:340px">
+        <svg viewBox="0 0 520 340">
+          <rect x="48" y="32" width="420" height="250" fill="#fff" stroke="#d4e0ed"/>
+          <line x1="80" y1="255" x2="440" y2="255" stroke="#7589a0" stroke-width="2"/>
+          <line x1="80" y1="255" x2="80" y2="60" stroke="#7589a0" stroke-width="2"/>
+          <text x="260" y="305" text-anchor="middle" font-size="16" fill="#35597f">time</text>
+          <text x="28" y="150" transform="rotate(-90,28,150)" font-size="16" fill="#35597f">temperature (°C)</text>
+          <line x1="80" y1="180" x2="440" y2="180" stroke="#444" stroke-dasharray="8,7" stroke-width="2"/>
+          <text x="448" y="184" font-size="15" fill="#444">MMM</text>
+          <line x1="80" y1="148" x2="440" y2="148" stroke="#c73e3e" stroke-dasharray="8,7" stroke-width="2"/>
+          <text x="448" y="152" font-size="15" fill="#c73e3e">MMM + 1°C</text>
+          <path d="M95 218 C130 213, 145 208, 167 195 C188 182, 201 190, 220 170 C240 150, 258 120, 283 116 C308 111, 326 138, 344 134 C362 130, 382 112, 426 126" fill="none" stroke="#1e62a7" stroke-width="4"/>
+          <path d="M95 218 C130 213, 145 208, 167 195 C188 182, 201 190, 220 170 C240 150, 258 120, 283 116 C308 111, 326 138, 344 134 C362 130, 382 112, 426 126 L426 180 L95 180 Z" fill="#fff1c9" opacity=".9"/>
+          <path d="M240 150 C258 120, 283 116, 308 111 C326 138, 344 134, 362 130 C382 112, 426 126 L426 148 L240 148 Z" fill="#ffd6d6" opacity=".9"/>
+          <text x="168" y="206" font-size="14" fill="#a06c09">above MMM but ≤ +1°C</text>
+          <text x="314" y="104" font-size="14" fill="#a73b3b">HotSpot above +1°C</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="slide-inner">
+    <div class="hdr"><div class="num">15</div><div><div class="hdrsmall">Thermal variable 3</div><h1>DHW: Degree Heating Weeks</h1></div></div>
+    <div class="two-col">
+      <div>
+        <div class="card">
+          <h2>What is DHW?</h2>
+          <ul>
+            <li><b>DHW</b> summarizes accumulated heat stress over the previous <b>12 weeks</b>.</li>
+            <li>Only HotSpot values <b>above +1°C</b> contribute.</li>
+            <li><b>Unit:</b> °C-weeks.</li>
+          </ul>
+          <h3>Simple example</h3>
+          <ul>
+            <li>Week 1 HotSpot = 1.5°C → counts as 1.5</li>
+            <li>Week 2 HotSpot = 0.7°C → counts as 0</li>
+            <li>Week 3 HotSpot = 2.0°C → counts as 2.0</li>
+            <li>If the 12-week sum is 4.0, then <b>DHW = 4 °C-weeks</b>.</li>
+          </ul>
+          <table class="table mini-table">
+            <tr><th>DHW</th><th>General meaning</th></tr>
+            <tr><td>0</td><td>no accumulated thermal stress</td></tr>
+            <tr><td>&lt; 4</td><td>heat is building, but below the common bleaching alert threshold</td></tr>
+            <tr><td>≥ 4</td><td>possible bleaching risk</td></tr>
+            <tr><td>≥ 8</td><td>severe thermal stress, high bleaching/mortality risk</td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="sstack">
+        <div class="svgwrap" style="height:230px">
+          <svg viewBox="0 0 500 230">
+            <line x1="42" y1="190" x2="470" y2="190" stroke="#7589a0" stroke-width="2"/>
+            <line x1="42" y1="190" x2="42" y2="28" stroke="#7589a0" stroke-width="2"/>
+            <g font-size="12" fill="#35597f" text-anchor="middle">
+              <text x="75" y="208">1</text><text x="108" y="208">2</text><text x="141" y="208">3</text><text x="174" y="208">4</text><text x="207" y="208">5</text><text x="240" y="208">6</text><text x="273" y="208">7</text><text x="306" y="208">8</text><text x="339" y="208">9</text><text x="372" y="208">10</text><text x="405" y="208">11</text><text x="438" y="208">12</text>
+            </g>
+            <g fill="#d9dee5">
+              <rect x="65" y="150" width="20" height="40"/><rect x="98" y="146" width="20" height="44"/><rect x="131" y="160" width="20" height="30"/>
+            </g>
+            <g fill="#d05555">
+              <rect x="164" y="110" width="20" height="80"/><rect x="197" y="98" width="20" height="92"/><rect x="230" y="170" width="20" height="20"/><rect x="263" y="86" width="20" height="104"/><rect x="296" y="80" width="20" height="110"/><rect x="329" y="92" width="20" height="98"/><rect x="362" y="130" width="20" height="60"/><rect x="395" y="135" width="20" height="55"/><rect x="428" y="144" width="20" height="46"/>
+            </g>
+            <polyline points="75,170 108,170 141,170 174,158 207,143 240,143 273,122 306,104 339,88 372,79 405,73 438,68" fill="none" stroke="#1e62a7" stroke-width="4"/>
+            <line x1="42" y1="120" x2="470" y2="120" stroke="#f0a500" stroke-dasharray="7,6"/>
+            <line x1="42" y1="78" x2="470" y2="78" stroke="#c73e3e" stroke-dasharray="7,6"/>
+            <text x="474" y="124" font-size="12" fill="#a06c09">DHW = 4</text>
+            <text x="474" y="82" font-size="12" fill="#a73b3b">DHW = 8</text>
+            <text x="55" y="20" font-size="15" fill="#0b3767" font-weight="700">Red bars = HotSpot &gt; +1°C and counted</text>
+          </svg>
+        </div>
+        <div class="imgbox"><img src="https://www.mdpi.com/remotesensing/remotesensing-18-02019/article_deploy/html/images/remotesensing-18-02019-g002.png" alt="Distribution of observations by DHW bin"><div class="kicker center">Real study result: many bleaching observations still occurred under low DHW.</div></div>
+      </div>
+    </div>
+    <div class="source">Real figure from the study manuscript: distribution of BO and BX observations by maximum DHW bin.</div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="slide-inner">
+    <div class="hdr"><div class="num">16</div><div><div class="hdrsmall">Optical variable 1</div><h1>PAR: Photosynthetically Active Radiation</h1></div></div>
+    <div class="two-col">
+      <div class="card">
+        <h2>What is PAR?</h2>
+        <ul>
+          <li><b>PAR</b> measures the amount of sunlight available for photosynthesis at the sea surface.</li>
+          <li>In this study, PAR comes from <b>NASA VIIRS ocean-color products</b>.</li>
+          <li><b>Unit:</b> Einstein m<sup>-2</sup> day<sup>-1</sup> (commonly treated as mol photons m<sup>-2</sup> day<sup>-1</sup>).</li>
+        </ul>
+        <h3>How do we read it?</h3>
+        <ul>
+          <li><b>High PAR</b>: stronger incoming sunlight</li>
+          <li><b>Low PAR</b>: weaker incoming sunlight, often due to cloud or season</li>
+        </ul>
+        <div class="callout">High PAR is not automatically “bad,” but under high temperature it can amplify photo-oxidative damage.</div>
+      </div>
+      <div class="svgwrap" style="height:320px">
+        <svg viewBox="0 0 520 320">
+          <rect x="18" y="20" width="484" height="280" rx="18" fill="#f8fbfe" stroke="#d4e0ed"/>
+          <rect x="18" y="160" width="484" height="140" rx="0" fill="#85cae4"/>
+          <text x="260" y="44" text-anchor="middle" font-size="20" fill="#0b3767" font-weight="700">Why PAR matters</text>
+          <text x="90" y="92" font-size="52">☀️</text>
+          <text x="408" y="90" font-size="52">🌡️</text>
+          <path d="M115 96 L190 155" stroke="#f0a500" stroke-width="5" marker-end="url(#arrow1)"/>
+          <path d="M382 92 L330 150" stroke="#d05555" stroke-width="5" marker-end="url(#arrow1)"/>
+          <defs><marker id="arrow1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><polygon points="0 0, 6 3, 0 6" fill="#1e62a7"/></marker></defs>
+          <path d="M210 236 C210 198,232 176,250 168 C258 180,256 198,250 216 C263 206,279 200,293 200 C295 212,286 224,273 232 C286 228,302 228,311 234 C308 245,295 252,280 255 C257 259,225 251,210 236Z" fill="#ef8f8f" stroke="#df7777" stroke-width="4"/>
+          <g fill="#7a57c2"><circle cx="245" cy="221" r="8"/><circle cx="261" cy="216" r="8"/><circle cx="277" cy="229" r="7"/></g>
+          <text x="260" y="118" text-anchor="middle" font-size="18" fill="#35597f">Light + heat together</text>
+          <text x="260" y="139" text-anchor="middle" font-size="18" fill="#35597f">can increase ROS and photodamage</text>
+          <text x="260" y="196" text-anchor="middle" font-size="34" fill="#f08a00">⚡ ROS</text>
+          <text x="260" y="286" text-anchor="middle" font-size="15" fill="#35597f">PAR helps represent the optical stress pathway.</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="slide-inner">
+    <div class="hdr"><div class="num">17</div><div><div class="hdrsmall">Optical / water-quality link</div><h1>Kd(490): how quickly does light disappear underwater?</h1></div></div>
+    <div class="two-col">
+      <div class="card">
+        <h2>What is Kd(490)?</h2>
+        <ul>
+          <li><b>Kd(490)</b> is the diffuse attenuation coefficient at 490 nm.</li>
+          <li>It describes how quickly light intensity decreases with depth.</li>
+          <li>Derived from <b>NASA VIIRS ocean-color</b> products after remote-sensing reflectance processing.</li>
+          <li><b>Unit:</b> m<sup>-1</sup>.</li>
+        </ul>
+        <h3>How do we read it?</h3>
+        <ul>
+          <li><b>Low Kd(490)</b> → clear water, light penetrates deeper</li>
+          <li><b>High Kd(490)</b> → turbid water, light is attenuated quickly</li>
+        </ul>
+        <div class="callout">Example: Kd(490) = 0.05 m<sup>-1</sup> is clearer than 0.15 m<sup>-1</sup>. Clearer water can raise light exposure at the coral, while moderate turbidity can provide shading.</div>
+      </div>
+      <div class="svgwrap" style="height:330px">
+        <svg viewBox="0 0 520 330">
+          <text x="125" y="32" text-anchor="middle" font-size="19" fill="#0b3767" font-weight="700">Low Kd(490)</text>
+          <text x="125" y="52" text-anchor="middle" font-size="15" fill="#35597f">clear water</text>
+          <text x="393" y="32" text-anchor="middle" font-size="19" fill="#0b3767" font-weight="700">High Kd(490)</text>
+          <text x="393" y="52" text-anchor="middle" font-size="15" fill="#35597f">turbid water</text>
+          <rect x="45" y="68" width="160" height="215" fill="#8ed3ee" stroke="#d4e0ed"/>
+          <rect x="315" y="68" width="160" height="215" fill="#75b7d7" stroke="#d4e0ed"/>
+          <text x="123" y="94" text-anchor="middle" font-size="30">☀️</text>
+          <text x="394" y="94" text-anchor="middle" font-size="30">☀️</text>
+          <g stroke="#ffd85e" stroke-width="4">
+            <line x1="105" y1="105" x2="105" y2="250"/><line x1="125" y1="105" x2="125" y2="235"/><line x1="145" y1="105" x2="145" y2="220"/>
+          </g>
+          <g stroke="#ffd85e" stroke-width="4" opacity=".5">
+            <line x1="376" y1="105" x2="376" y2="180"/><line x1="396" y1="105" x2="396" y2="165"/><line x1="416" y1="105" x2="416" y2="150"/>
+          </g>
+          <g fill="#8b7b68" opacity=".42">
+            <circle cx="351" cy="120" r="5"/><circle cx="425" cy="143" r="4"/><circle cx="388" cy="168" r="4"/><circle cx="437" cy="196" r="5"/><circle cx="341" cy="214" r="5"/>
+          </g>
+          <text x="124" y="272" text-anchor="middle" font-size="18">🪸 coral receives more light</text>
+          <text x="394" y="272" text-anchor="middle" font-size="18">🪸 coral receives less light</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="slide-inner">
+    <div class="hdr"><div class="num">18</div><div><div class="hdrsmall">Water-quality variable</div><h1>Chl-a: chlorophyll-a as a proxy for phytoplankton and nutrients</h1></div></div>
+    <div class="two-col">
+      <div class="card">
+        <h2>What is Chl-a?</h2>
+        <ul>
+          <li><b>Chl-a</b> is the concentration of chlorophyll-a in the water column.</li>
+          <li>Derived from <b>NASA VIIRS ocean-color</b> products.</li>
+          <li><b>Unit:</b> mg m<sup>-3</sup>.</li>
+        </ul>
+        <h3>What does it tell us?</h3>
+        <ul>
+          <li>It is a satellite-observable proxy for <b>phytoplankton biomass</b> and broader productivity conditions.</li>
+          <li>Higher Chl-a often suggests more productive or nutrient-influenced water.</li>
+          <li>Lower Chl-a often suggests clearer, more oligotrophic oceanic water.</li>
+        </ul>
+        <div class="callout">Example: if one reef has Chl-a = 0.2 mg m<sup>-3</sup> and another has 1.5 mg m<sup>-3</sup>, the second reef is in a much more productive or nutrient-enriched water mass.</div>
+      </div>
+      <div class="sstack">
+        <div class="card soft">
+          <h2>Why can Chl-a matter for bleaching?</h2>
+          <ul>
+            <li>Nutrient-enriched conditions can change coral–symbiont balance and lower stress tolerance.</li>
+            <li>But not all productivity effects are harmful. Some moderate productivity conditions may be protective.</li>
+            <li>That is why the model learns the relationship from data rather than imposing one fixed direction.</li>
+          </ul>
+        </div>
+        <div class="svgwrap" style="height:240px">
+          <svg viewBox="0 0 500 240">
+            <rect x="18" y="30" width="180" height="180" rx="18" fill="#eaf6ff" stroke="#d4e0ed"/>
+            <rect x="302" y="30" width="180" height="180" rx="18" fill="#eff8ea" stroke="#d4e0ed"/>
+            <text x="108" y="55" text-anchor="middle" font-size="18" fill="#0b3767" font-weight="700">Low Chl-a</text>
+            <text x="392" y="55" text-anchor="middle" font-size="18" fill="#0b3767" font-weight="700">High Chl-a</text>
+            <text x="108" y="86" text-anchor="middle" font-size="15" fill="#35597f">clearer, more oceanic water</text>
+            <text x="392" y="86" text-anchor="middle" font-size="15" fill="#35597f">more productive / nutrient-influenced water</text>
+            <text x="108" y="138" text-anchor="middle" font-size="48">🌊</text>
+            <text x="392" y="138" text-anchor="middle" font-size="48">🌊🌿</text>
+            <text x="108" y="176" text-anchor="middle" font-size="14" fill="#35597f">less phytoplankton</text>
+            <text x="392" y="176" text-anchor="middle" font-size="14" fill="#35597f">more phytoplankton / stronger nutrient signal</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="slide-inner">
+    <div class="hdr"><div class="num">19</div><div><div class="hdrsmall">Example result</div><h1>Why does a multi-pathway stress framework help?</h1></div></div>
+    <div class="col-4060">
+      <div class="card">
+        <h2>Bali example</h2>
+        <ul>
+          <li>The top-left map shows the final <b>CRESI</b> stress score.</li>
+          <li>The top-right map shows same-date <b>DHW</b>.</li>
+          <li>The bottom row separates the stress into <b>thermal</b>, <b>optical</b>, and <b>water-quality</b> pathway scores.</li>
+        </ul>
+        <h3>Main message</h3>
+        <ul>
+          <li>Some reef cells show high CRESI even when same-date DHW is relatively low.</li>
+          <li>This happens because the total stress estimate can include optical and water-quality effects, not only heat.</li>
+          <li>The component maps are <b>model-estimated pathway contributions</b>, not direct proof of ecological causation, but they help interpretation.</li>
+        </ul>
+      </div>
+      <div class="imgbox">
+        <img src="https://www.mdpi.com/remotesensing/remotesensing-18-02019/article_deploy/html/images/remotesensing-18-02019-g006.png" alt="Bali CRESI result figure">
+        <div class="kicker center">Real result figure from the study: Bali example with CRESI, DHW, and pathway scores.</div>
+      </div>
+    </div>
+    <div class="source">Real figure from the study manuscript / preliminary presentation showing Bali stress components.</div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="slide-inner">
+    <div class="hdr"><div class="num">20</div><div><div class="hdrsmall">Take-home messages</div><h1>Summary of today’s seminar</h1></div></div>
+    <div class="three-col">
+      <div class="card">
+        <div class="tag thermal">Thermal pathway</div>
+        <h2>SST, SSTA, MMM, HotSpot, DHW</h2>
+        <ul>
+          <li>SST = absolute temperature</li>
+          <li>SSTA = anomaly from climatology</li>
+          <li>MMM + HotSpot define the bleaching threshold logic</li>
+          <li>DHW = accumulated thermal stress over 12 weeks</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="tag optical">Optical pathway</div>
+        <h2>PAR and clarity</h2>
+        <ul>
+          <li>PAR represents incoming sunlight for photosynthesis.</li>
+          <li>Kd(490) describes how fast light disappears underwater.</li>
+          <li>High light can amplify thermal damage.</li>
+          <li>Clear versus turbid water changes the light field experienced by corals.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="tag wq">Water-quality pathway</div>
+        <h2>Kd(490) and Chl-a context</h2>
+        <ul>
+          <li>Chl-a helps represent productivity and nutrient-related conditions.</li>
+          <li>Water quality can lower or modify bleaching tolerance.</li>
+          <li>This is why CRESI combines multiple pathways rather than relying on heat alone.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:16px">Final message: <b>bleaching is the observed endpoint, but CRESI is designed to describe the environmental stress process that leads to it.</b></div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="slide-inner">
+    <div class="hdr"><div class="num">21</div><div><div class="hdrsmall">Next seminar</div><h1>What comes next?</h1></div></div>
+    <div class="two-col">
+      <div class="card soft">
+        <div class="tag blue">Next seminar topic</div>
+        <h2>Allen Coral Atlas and reference observations</h2>
+        <ul>
+          <li>What the Allen Coral Atlas (ACA) is</li>
+          <li>How reef extent and habitat mapping are produced</li>
+          <li>How independent reef-scale observations are used for reference labels</li>
+          <li>How these reef observations connect to the environmental stress framework</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h2>Why it matters</h2>
+        <ul>
+          <li>Today we focused on the <b>environmental inputs</b>.</li>
+          <li>Next time we move to the <b>reef-side reference information</b>.</li>
+          <li>Together, these two pieces explain how the training and evaluation framework is built.</li>
+        </ul>
+        <div class="callout">Thank you. Questions and discussion are welcome.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<div class="nav">
+  <button id="prevBtn">← Previous</button>
+  <div class="counter"><span id="idx">1</span> / <span id="total">21</span></div>
+  <button id="nextBtn">Next →</button>
+</div>
+<div class="progress" id="progress"></div>
+
+<script>
+const slides=[...document.querySelectorAll('.slide')];
+const total=slides.length; document.getElementById('total').textContent=total;
+let cur=0;
+function show(i){
+  cur=Math.max(0,Math.min(total-1,i));
+  slides.forEach((s,idx)=>s.classList.toggle('active',idx===cur));
+  document.getElementById('idx').textContent=cur+1;
+  document.getElementById('prevBtn').disabled=cur===0;
+  document.getElementById('nextBtn').disabled=cur===total-1;
+  document.getElementById('progress').style.width=((cur+1)/total*100)+'vw';
+}
+document.getElementById('prevBtn').onclick=()=>show(cur-1);
+document.getElementById('nextBtn').onclick=()=>show(cur+1);
+document.addEventListener('keydown',e=>{ if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){e.preventDefault();show(cur+1)} if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();show(cur-1)} if(e.key==='Home'){show(0)} if(e.key==='End'){show(total-1)} });
+show(0);
+</script>
+</body>
+</html>
