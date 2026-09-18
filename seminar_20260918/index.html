@@ -140,6 +140,15 @@ li{margin:.28em 0}
   .slide{position:relative;display:block;height:auto;min-height:100vh}
   .nav,.progress{display:none}
 }
+
+.photo-pair{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.photo-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:10px}
+.photo-card img{width:100%;height:300px;object-fit:cover;border-radius:12px;display:block}
+.map-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:10px}
+.map-card img{width:100%;max-height:330px;object-fit:contain;border-radius:10px;display:block;background:#fff}
+.map-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.data-note{font-size:13px;color:var(--muted);margin-top:6px;text-align:center}
+@media(max-width:1200px){.photo-pair,.map-grid{grid-template-columns:1fr}.photo-card img{height:auto}}
 </style>
 </head>
 <body>
